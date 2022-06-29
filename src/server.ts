@@ -19,8 +19,7 @@ mongoose
     console.log('connected to MONGO_DB');
   })
   .catch((error) => {
-    console.log(error);
-    
+    console.log('unable to connect', error);
   })
 
 
