@@ -28,3 +28,13 @@ export const addList = async (ctx: Context) => {
   }
 }
 
+export const deleteList = async (ctx: Context) => {
+  try {
+    await Board.updateOne({ _id: ctx.params.id }, { $pull: { listsId: ctx.request.body._id } })
+    ctx.body = await List.deleteOne({ _id: ctx.request.body._id })
+    ctx.status = 202
+  } catch {
+    ctx.status = 504
+    ctx.body = 'cant delete List, server error'
+  }
+}

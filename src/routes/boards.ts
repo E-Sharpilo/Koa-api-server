@@ -5,6 +5,6 @@ export const BordersRout = new Router()
 
 
 BordersRout.get('/', getAllBoards)
-BordersRout.get('/:id', getBoardWidthLists)
 BordersRout.post('/', addBoard)
 BordersRout.delete('/', deleteBoard)
+BordersRout.get('/:id', getBoardWidthLists)
