@@ -48,7 +48,7 @@ export const updateList = async (ctx: Context) => {
 
 export const getLists = async (ctx: Context) => {
   try {
-    ctx.body = await List.find({ boardId: ctx.request.query.boardId })
+    ctx.body = await List.find({ boardId: ctx.request.query.boardId }).populate('cardsId')
     ctx.status = 200
   } catch (error) {
     ctx.status = 504
