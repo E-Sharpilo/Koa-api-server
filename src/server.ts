@@ -1,40 +1,37 @@
 import Koa from 'koa';
-import Router from 'koa-router';
-import { DefaultState, DefaultContext, ParameterizedContext } from 'koa';
 import cors from '@koa/cors'
 import bodyParser from 'koa-bodyparser';
 import { config } from './config/config';
-import 'dotenv/config'
 import mongoose from 'mongoose';
+import { BordersRout } from './routes/boards'
+import { ListsRout } from './routes/lists';
 
 const PORT = config.server.port
 
-const server: Koa<DefaultState, DefaultContext> = new Koa()
-const router: Router = new Router()
-
+const server: Koa = new Koa()
 
 mongoose
-  .connect(config.mongo.url, {retryWrites: true, w: 'majority'})
+  .connect(config.mongo.url, { retryWrites: true, w: 'majority' })
   .then(() => {
     console.log('connected to MONGO_DB');
+    start()
   })
   .catch((error) => {
-    console.log(error);
-    
+    console.log('unable to connect', error);
   })
 
 
-server.use(cors())
-server.use(bodyParser())
+const start = () => {
+  try{
+    server.use(cors())
+    server.use(bodyParser())
+  
+    server.use(BordersRout.routes()).use(ListsRout.routes())
 
-router.get('/', async (ctx: ParameterizedContext<DefaultState, DefaultContext>) => {
-  ctx.body = { msg: 'Hello' }
-})
-
-
-server.use(router.routes()).use(router.allowedMethods())
-
-
-server.listen(PORT).on('listening', () => (
-  console.log(`sever listening ${PORT} port, go to http://localhost:${PORT}`)
-))
+    server.listen(PORT).on('listening', () => (
+      console.log(`sever listening ${PORT} port, go to http://localhost:${PORT}`)
+    ))
+  }catch {
+    console.log(new Error);
+  }
+}
