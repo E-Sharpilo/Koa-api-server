@@ -18,7 +18,7 @@ export const addList = async (ctx: Context) => {
         console.log(err);
       }
     })
-  
+
     await Board.updateOne({ _id: ctx.params.id }, { $push: { listsId: list._id } })
     ctx.body = list
     ctx.status = 201;
@@ -27,3 +27,4 @@ export const addList = async (ctx: Context) => {
     ctx.body = 'cant create list, server error'
   }
 }
+

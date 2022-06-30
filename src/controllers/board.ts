@@ -40,15 +40,17 @@ export const getAllBoards = async (ctx: Context) => {
   }
 }
 
-export const getBoard = async (ctx: Context) => {  
+export const getBoardWidthLists = async (ctx: Context) => {
   try {
-    ctx.body = await Board.findById(ctx.params.id)
-    ctx.status = 200
+    ctx.status = 200;
+    ctx.body = await Board.find({ _id: ctx.params.id })
+      .populate('listsId')
   } catch {
-    ctx.status = 404
-    ctx.body = 'Board not found'
+    ctx.status = 504;
+    ctx.body = 'cant get boards, server error'
   }
 }
+
 
 export const deleteBoard = async (ctx: Context) => {
   try {
