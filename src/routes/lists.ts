@@ -1,7 +1,11 @@
 import Router from "koa-router";
-import { addList, deleteList } from "../controllers/list";
+import { addList, deleteList, getLists, updateList } from "../controllers/list";
 
-export const ListsRout = new Router()
+export const ListsRout = new Router({
+  prefix: '/list'
+})
 
-ListsRout.post('/:id', addList)
-ListsRout.delete('/:id', deleteList)
+ListsRout.post('/', addList)
+ListsRout.delete('/', deleteList)
+ListsRout.patch('/', updateList)
+ListsRout.get('/', getLists)
