@@ -11,8 +11,8 @@ export const addCard = async (ctx: Context) => {
     boardId: ctx.request.body.boardId,
     listId: ctx.request.body.listId,
     title: ctx.request.body.title,
-    description: '',
-    tagsId:[]
+    description: ctx.request.body.description || '',
+    tagsId: ctx.request.body.tagId || []
   }
   try {
     await List.updateOne({ _id: ctx.request.body.listId }, { $push: { cardsId: card._id } })
