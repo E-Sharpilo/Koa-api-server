@@ -11,6 +11,7 @@ import { TBoard } from "../types/board";
 export const addBoard = async (ctx: Context) => {
   const board: TBoard = {
     _id: new mongoose.Types.ObjectId(),
+    color: ctx.request.body.color,
     title: ctx.request.body.title,
     listsId: []
   }
