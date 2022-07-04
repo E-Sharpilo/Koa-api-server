@@ -8,11 +8,8 @@ import { List } from "../models/list";
 export const addCard = async (ctx: Context) => {
   const card: TCard = {
     _id: new mongoose.Types.ObjectId(),
-    boardId: ctx.request.body.boardId,
-    listId: ctx.request.body.listId,
     title: ctx.request.body.title,
     description: ctx.request.body.description || '',
-    tagsId: ctx.request.body.tagId || []
   }
   try {
     await List.updateOne({ _id: ctx.request.body.listId }, { $push: { cardsId: card._id } })
@@ -49,7 +46,7 @@ export const getCards = async (ctx: Context) => {
 
 export const updateCard = async (ctx: Context) => {
   try {
-    await Card.updateOne({ cardId: ctx.request.body.cardId }, { title: ctx.request.body.title })
+    await Card.updateOne({ cardId: ctx.request.body.cardId }, { title: ctx.request.body.title, description: ctx.request.body.description})
     ctx.body = await Card.findOne({ cardId: ctx.request.body.cardId })
     ctx.status = 200
   } catch (error) {

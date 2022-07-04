@@ -4,7 +4,6 @@ import { TTag } from '../types/tag';
 
 const tagSchema = new Schema<TTag>({
   _id: Schema.Types.ObjectId,
-  boardId: Schema.Types.ObjectId,
   title: { type: String, required: true },
   color: { type: String }
 }, {
