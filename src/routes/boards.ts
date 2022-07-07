@@ -6,8 +6,8 @@ export const BordersRout = new Router({
 })
 
 
-BordersRout.get('/', getBoards)
+BordersRout.get('/:id?', getBoards)
 BordersRout.post('/', addBoard)
-BordersRout.delete('/', deleteBoard)
-BordersRout.patch('/', updateBoard)
+BordersRout.delete('/:id', deleteBoard)
+BordersRout.patch('/:id', updateBoard)
 
