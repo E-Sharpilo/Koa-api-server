@@ -2,6 +2,7 @@ import { Context } from "koa";
 import mongoose from "mongoose";
 
 import { Board } from "../models/board";
+import { List } from "../models/list";
 import { TBoard } from "../types/board";
 
 export const addBoard = async (ctx: Context) => {
@@ -40,6 +41,7 @@ export const getBoards = async (ctx: Context) => {
 export const deleteBoard = async (ctx: Context) => {
   try {
     ctx.body = await Board.deleteOne({ _id: ctx.url.split("/")[2] });
+    await List.deleteMany({boardId: ctx.url.split("/")[2]})
     ctx.status = 200;
   } catch (error) {
     ctx.status = 504;

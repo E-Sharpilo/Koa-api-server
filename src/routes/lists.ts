@@ -8,4 +8,4 @@ export const ListsRout = new Router({
 ListsRout.post('/', addList)
 ListsRout.delete('/', deleteList)
 ListsRout.patch('/', updateList)
-ListsRout.get('/', getLists)
+ListsRout.get('/:id?', getLists)
