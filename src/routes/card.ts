@@ -6,6 +6,6 @@ export const CardsRout = new Router({
 })
 
 CardsRout.post('/', addCard)
-CardsRout.get('/', getCards)
+CardsRout.get('/:id?', getCards)
 CardsRout.delete('/', deleteCard)
 CardsRout.patch('/', updateCard)

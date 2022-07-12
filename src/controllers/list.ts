@@ -8,8 +8,7 @@ export const addList = async (ctx: Context) => {
   const list: TList = {
     boardId: ctx.request.body.boardId,
     _id: new mongoose.Types.ObjectId(),
-    title: ctx.request.body.title,
-    cardsId: [],
+    title: ctx.request.body.title
   };
 
   try {
@@ -56,9 +55,7 @@ export const updateList = async (ctx: Context) => {
 
 export const getLists = async (ctx: Context) => {
   try {
-    ctx.body = await List.find({ boardId: ctx.url.split("/")[2] }).populate(
-      "cardsId"
-    );
+    ctx.body = await List.find({ boardId: ctx.url.split("/")[2] });
     ctx.status = 200;
   } catch (error) {
     ctx.status = 404;

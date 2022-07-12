@@ -11,8 +11,7 @@ const boardSchema = new Schema<TBoard>(
     color: {
       type: String,
       required: true,
-    },
-    listsId: [{ type: Schema.Types.ObjectId, ref: "List" }],
+    }
   },
   {
     versionKey: false,
