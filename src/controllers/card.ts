@@ -10,7 +10,7 @@ export const addCard = async (ctx: Context) => {
     listId: ctx.request.body.listId,
     boardId: ctx.request.body.boardId,
     title: ctx.request.body.title,
-    description: ctx.request.body.description || "",
+    description: ctx.request.body.description || '',
   };
   try {
     await Card.create(card);

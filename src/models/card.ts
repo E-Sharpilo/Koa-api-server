@@ -6,6 +6,7 @@ const cardSchema = new Schema<TCard>({
   boardId: Schema.Types.ObjectId,
   listId: Schema.Types.ObjectId,
   title: { type: String, required: true },
+  description: String,
 }, {
   versionKey: false
 })
