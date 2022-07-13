@@ -6,6 +6,6 @@ export const ListsRout = new Router({
 })
 
 ListsRout.post('/', addList)
-ListsRout.delete('/', deleteList)
-ListsRout.patch('/', updateList)
+ListsRout.delete('/:id', deleteList)
+ListsRout.patch('/:id', updateList)
 ListsRout.get('/:id?', getLists)

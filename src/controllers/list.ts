@@ -32,12 +32,10 @@ export const deleteList = async (ctx: Context) => {
 };
 
 export const updateList = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
+  
   try {
-    await List.updateOne(
-      { _id: ctx.request.body.listId },
-      { title: ctx.request.body.title }
-    );
-    ctx.body = await List.findOne({ _id: ctx.request.body.listId });
+    ctx.body = await listService.updateList(ctx, id);
     ctx.status = 200;
   } catch (error) {
     ctx.status = 504;

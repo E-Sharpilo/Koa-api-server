@@ -26,4 +26,18 @@ export class ListService {
 
     return list
   }
+
+  async updateList(ctx: Context, id: string) {
+    await List.updateOne(
+      { _id: id },
+      { title: ctx.request.body.title.trim() }
+    );
+    const list = await List.findOne({ _id: id });
+
+    if (!list) {
+      throw new Error("Board not found");
+    }
+
+    return list;
+  }
 }
