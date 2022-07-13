@@ -4,7 +4,7 @@ import bodyParser from 'koa-bodyparser';
 import { config } from './config/config';
 import mongoose from 'mongoose';
 import { BordersRout } from './routes/boards'
-import { ListsRout } from './routes/lists';
+import { ListsRout } from './routes/list';
 import { CardsRout } from './routes/card';
 import { TagsRout } from './routes/tag';
 

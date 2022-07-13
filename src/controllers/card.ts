@@ -8,9 +8,8 @@ export const addCard = async (ctx: Context) => {
   const card: TCard = {
     _id: new mongoose.Types.ObjectId(),
     listId: ctx.request.body.listId,
-    boardId: ctx.request.body.boardId,
     title: ctx.request.body.title,
-    description: ctx.request.body.description || '',
+    description: ctx.request.body.description || "",
   };
   try {
     await Card.create(card);
@@ -37,14 +36,13 @@ export const deleteCard = async (ctx: Context) => {
 };
 
 export const getCards = async (ctx: Context) => {
-  console.log("getCards", ctx.query.boardId);
   try {
     if (ctx.url.split("/")[2]) {
       ctx.body = await Card.findOne({ _id: ctx.url.split("/")[2] });
       ctx.status = 200;
     } else {
       ctx.status = 200;
-      ctx.body = await Card.find({ boardId: ctx.query.boardId });
+      ctx.body = await Card.find({ listId: ctx.query.listId });
     }
   } catch (error) {
     ctx.status = 404;

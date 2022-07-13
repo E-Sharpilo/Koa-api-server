@@ -2,22 +2,14 @@ import { Context } from "koa";
 import mongoose from "mongoose";
 import { Board } from "../models/board";
 import { List } from "../models/list";
+import { ListService } from "../services/list";
 import { TList } from "../types/list";
 
-export const addList = async (ctx: Context) => {
-  const list: TList = {
-    boardId: ctx.request.body.boardId,
-    _id: new mongoose.Types.ObjectId(),
-    title: ctx.request.body.title
-  };
+const listService = new ListService()
 
+export const addList = async (ctx: Context) => {
   try {
-    await Board.updateOne(
-      { _id: ctx.request.body.boardId },
-      { $push: { listsId: list._id } }
-    );
-    await List.create(list);
-    ctx.body = list;
+    ctx.body = await listService.createList(ctx);
     ctx.status = 201;
   } catch (error) {
     ctx.status = 500;
@@ -55,7 +47,7 @@ export const updateList = async (ctx: Context) => {
 
 export const getLists = async (ctx: Context) => {
   try {
-    ctx.body = await List.find({ boardId: ctx.url.split("/")[2] });
+    ctx.body = await listService.getLists(ctx);
     ctx.status = 200;
   } catch (error) {
     ctx.status = 404;
