@@ -8,14 +8,24 @@ import { CardService } from "./card";
 const cardService = new CardService();
 
 export class ListService {
-  async getLists(id: string) {
-    const lists = await List.find({ boardId: id });
+  async getLists(boardId: string[] | string) {
+    const allLists = await List.find({ boardId: boardId });
 
-    if (!lists) {
+    if (!allLists) {
       throw new Error("Lists not found");
     }
 
-    return lists;
+    return allLists;
+  }
+
+  async getListById(id: string) {
+    const list = await List.findOne({ _id: id });
+
+    if (!list) {
+      throw new Error("List not found");
+    }
+
+    return list;
   }
 
   async createList(ctx: Context) {
@@ -46,7 +56,7 @@ export class ListService {
       const cardsId = await Card.find({ listId: id }, { _id: true });
 
       cardsId.forEach(async (card) => {
-        await cardService.deleteCard(card._id.toString())
+        await cardService.deleteCard(card._id.toString());
       });
 
       await List.deleteOne({ _id: id });

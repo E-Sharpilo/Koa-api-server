@@ -3,7 +3,7 @@ import { BoardService } from "../services/board";
 
 const boardService = new BoardService()
 
-export const addBoard = async (ctx: Context) => {
+export const createBoard = async (ctx: Context) => {
   try {
     ctx.body = await boardService.createBoard(ctx);
     ctx.status = 201;

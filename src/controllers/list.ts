@@ -39,9 +39,18 @@ export const updateList = async (ctx: Context) => {
 
 export const getLists = async (ctx: Context) => {
   const id = ctx.url.split("/")[2];
+  const boardId = ctx.query.boardId;
   try {
-    ctx.body = await listService.getLists(id);
-    ctx.status = 200;
+    if(boardId) {
+      ctx.body = await listService.getLists(boardId);
+      ctx.status = 200;
+    }
+
+    if(id) {
+      ctx.body = await listService.getListById(id);
+      ctx.status = 200;
+    }
+
   } catch (error) {
     ctx.status = 404;
     ctx.body = error;
