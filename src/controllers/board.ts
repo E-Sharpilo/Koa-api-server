@@ -30,8 +30,10 @@ export const getBoards = async (ctx: Context) => {
 };
 
 export const deleteBoard = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
+
   try {
-    ctx.body = await boardService.deleteBoard(ctx)
+    ctx.body = await boardService.deleteBoard(id)
     ctx.status = 200;
   } catch (error) {
     ctx.status = 504;

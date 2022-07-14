@@ -2,18 +2,13 @@ import { Context } from "koa";
 import mongoose from "mongoose";
 import { Card } from "../models/card";
 import { TCard } from "../types/card";
-import { List } from "../models/list";
+import { CardService } from "../services/card";
 
-export const addCard = async (ctx: Context) => {
-  const card: TCard = {
-    _id: new mongoose.Types.ObjectId(),
-    listId: ctx.request.body.listId,
-    title: ctx.request.body.title,
-    description: ctx.request.body.description || "",
-  };
+const cardService = new CardService();
+
+export const createCard = async (ctx: Context) => {
   try {
-    await Card.create(card);
-    ctx.body = card;
+    ctx.body = await cardService.createCard(ctx);
     ctx.status = 201;
   } catch (error) {
     ctx.status = 500;
@@ -22,12 +17,9 @@ export const addCard = async (ctx: Context) => {
 };
 
 export const deleteCard = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
   try {
-    await List.updateOne(
-      { _id: ctx.request.body.listId },
-      { $pull: { _id: ctx.request.body.cardId } }
-    );
-    await Card.deleteOne({ _id: ctx.request.body.cardId });
+    ctx.body = await cardService.deleteCard(id);
     ctx.status = 202;
   } catch (error) {
     ctx.status = 504;
@@ -36,13 +28,17 @@ export const deleteCard = async (ctx: Context) => {
 };
 
 export const getCards = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
+  const listId = ctx.query.listId;
   try {
-    if (ctx.url.split("/")[2]) {
-      ctx.body = await Card.findOne({ _id: ctx.url.split("/")[2] });
+    if (id) {
+      ctx.body = await cardService.getCardById(id);
       ctx.status = 200;
-    } else {
+    }
+
+    if (listId) {
       ctx.status = 200;
-      ctx.body = await Card.find({ listId: ctx.query.listId });
+      ctx.body = await cardService.getCards(listId);
     }
   } catch (error) {
     ctx.status = 404;
@@ -51,18 +47,14 @@ export const getCards = async (ctx: Context) => {
 };
 
 export const updateCard = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
   try {
-    await Card.updateOne(
-      { cardId: ctx.request.body.cardId },
-      {
-        title: ctx.request.body.title,
-        description: ctx.request.body.description,
-      }
-    );
-    ctx.body = await Card.findOne({ cardId: ctx.request.body.cardId });
-    ctx.status = 200;
+    if (id) {
+      ctx.body = await cardService.updateCard(id, ctx);
+      ctx.status = 200;
+    }
   } catch (error) {
-    ctx.status = 504;
+    ctx.status = 404;
     ctx.body = error;
   }
 };

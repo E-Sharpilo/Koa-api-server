@@ -1,11 +1,14 @@
 import { Context } from "koa";
 import mongoose from "mongoose";
+import { Card } from "../models/card";
 import { List } from "../models/list";
 import { TList } from "../types/list";
+import { CardService } from "./card";
+
+const cardService = new CardService();
 
 export class ListService {
-  async getLists(ctx: Context) {
-    const id = ctx.url.split("/")[2];
+  async getLists(id: string) {
     const lists = await List.find({ boardId: id });
 
     if (!lists) {
@@ -19,19 +22,16 @@ export class ListService {
     const list: TList = {
       boardId: ctx.request.body.boardId,
       _id: new mongoose.Types.ObjectId(),
-      title: ctx.request.body.title
+      title: ctx.request.body.title,
     };
 
     await List.create(list);
 
-    return list
+    return list;
   }
 
   async updateList(ctx: Context, id: string) {
-    await List.updateOne(
-      { _id: id },
-      { title: ctx.request.body.title.trim() }
-    );
+    await List.updateOne({ _id: id }, { title: ctx.request.body.title.trim() });
     const list = await List.findOne({ _id: id });
 
     if (!list) {
@@ -39,5 +39,19 @@ export class ListService {
     }
 
     return list;
+  }
+
+  async deleteList(id: string) {
+    if (id) {
+      const cardsId = await Card.find({ listId: id }, { _id: true });
+
+      cardsId.forEach(async (card) => {
+        await cardService.deleteCard(card._id.toString())
+      });
+
+      await List.deleteOne({ _id: id });
+    }
+
+    return id;
   }
 }

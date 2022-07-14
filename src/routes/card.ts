@@ -1,11 +1,11 @@
 import Router from "koa-router";
-import { addCard, deleteCard, getCards, updateCard } from "../controllers/card";
+import { createCard, deleteCard, getCards, updateCard } from "../controllers/card";
 
 export const CardsRout = new Router({
   prefix: '/card'
 })
 
-CardsRout.post('/', addCard)
+CardsRout.post('/', createCard)
 CardsRout.get('/:id?', getCards)
-CardsRout.delete('/', deleteCard)
-CardsRout.patch('/', updateCard)
+CardsRout.delete('/:id?', deleteCard)
+CardsRout.patch('/:id?', updateCard)

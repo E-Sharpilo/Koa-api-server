@@ -1,13 +1,9 @@
 import { Context } from "koa";
-import mongoose from "mongoose";
-import { Board } from "../models/board";
-import { List } from "../models/list";
 import { ListService } from "../services/list";
-import { TList } from "../types/list";
 
 const listService = new ListService()
 
-export const addList = async (ctx: Context) => {
+export const createList = async (ctx: Context) => {
   try {
     ctx.body = await listService.createList(ctx);
     ctx.status = 201;
@@ -18,12 +14,10 @@ export const addList = async (ctx: Context) => {
 };
 
 export const deleteList = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
+  
   try {
-    await Board.updateOne(
-      { _id: ctx.request.body.boardId },
-      { $pull: { listsId: ctx.request.body.listId } }
-    );
-    await List.deleteOne({ _id: ctx.request.body.listId });
+    ctx.body = await listService.deleteList(id)
     ctx.status = 202;
   } catch (error) {
     ctx.status = 504;
@@ -44,8 +38,9 @@ export const updateList = async (ctx: Context) => {
 };
 
 export const getLists = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
   try {
-    ctx.body = await listService.getLists(ctx);
+    ctx.body = await listService.getLists(id);
     ctx.status = 200;
   } catch (error) {
     ctx.status = 404;
