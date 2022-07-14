@@ -1,10 +1,13 @@
 import Router from "koa-router";
-import { addBoard, deleteBoard, getAllBoards, getBoardWidthLists } from "../controllers/board";
+import { addBoard, deleteBoard, getBoards, updateBoard} from "../controllers/board";
 
-export const BordersRout = new Router()
+export const BordersRout = new Router({
+  prefix: '/board'
+})
 
 
-BordersRout.get('/', getAllBoards)
+BordersRout.get('/:id?', getBoards)
 BordersRout.post('/', addBoard)
-BordersRout.delete('/', deleteBoard)
-BordersRout.get('/:id', getBoardWidthLists)
+BordersRout.delete('/:id', deleteBoard)
+BordersRout.patch('/:id', updateBoard)
+

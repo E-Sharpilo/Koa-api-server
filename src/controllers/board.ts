@@ -1,63 +1,51 @@
-
 import { Context } from "koa";
-import mongoose from "mongoose";
+import { BoardService } from "../services/board";
 
-import { Board } from '../models/board';
-import { TBoard } from "../types/board";
-
-
-
+const boardService = new BoardService()
 
 export const addBoard = async (ctx: Context) => {
-
-  const board: TBoard = {
-    _id: new mongoose.Types.ObjectId(),
-    title: ctx.request.body.title,
-    listsId: []
-  }
-
   try {
-    Board.create(board, function (err) {
-      if (err) {
-        console.log(err);
-      }
-    });
-    ctx.body = board
+    ctx.body = await boardService.createBoard(ctx);
     ctx.status = 201;
-  } catch {
-    ctx.status = 504;
-    ctx.body = 'cant create board, server error'
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = error;
   }
-}
+};
 
-export const getAllBoards = async (ctx: Context) => {
+export const getBoards = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
   try {
-    ctx.status = 200;
-    ctx.body = await Board.find({});
-  } catch {
-    ctx.status = 504;
-    ctx.body = 'cant get boards, server error'
+    if (id) {
+      ctx.body = await boardService.getBoardById(id);
+      ctx.status = 200;
+    } else {
+      ctx.body = await boardService.getBoards();
+      ctx.status = 200;
+    }
+  } catch (error) {
+    ctx.status = 404;
+    ctx.body = error;
   }
-}
-
-export const getBoardWidthLists = async (ctx: Context) => {
-  try {
-    ctx.status = 200;
-    ctx.body = await Board.find({ _id: ctx.params.id })
-      .populate('listsId')
-  } catch {
-    ctx.status = 504;
-    ctx.body = 'cant get boards, server error'
-  }
-}
-
+};
 
 export const deleteBoard = async (ctx: Context) => {
   try {
-    ctx.body = await Board.deleteOne({ _id: ctx.request.body._id })
-    ctx.status = 202
-  } catch {
-    ctx.status = 504
-    ctx.body = 'cant delete board, server error'
+    ctx.body = await boardService.deleteBoard(ctx)
+    ctx.status = 200;
+  } catch (error) {
+    ctx.status = 504;
+    ctx.body = error;
   }
-}
+};
+
+export const updateBoard = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
+  try {
+    ctx.body = await boardService.updateBoard(ctx, id);
+    ctx.status = 200;
+  } catch (error) {
+    ctx.status = 404;
+    ctx.body = error;
+  }
+};

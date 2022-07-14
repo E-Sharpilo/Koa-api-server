@@ -4,7 +4,9 @@ import bodyParser from 'koa-bodyparser';
 import { config } from './config/config';
 import mongoose from 'mongoose';
 import { BordersRout } from './routes/boards'
-import { ListsRout } from './routes/lists';
+import { ListsRout } from './routes/list';
+import { CardsRout } from './routes/card';
+import { TagsRout } from './routes/tag';
 
 const PORT = config.server.port
 
@@ -26,7 +28,10 @@ const start = () => {
     server.use(cors())
     server.use(bodyParser())
   
-    server.use(BordersRout.routes()).use(ListsRout.routes())
+    server.use(BordersRout.routes())
+      .use(ListsRout.routes())
+      .use(CardsRout.routes())
+      .use(TagsRout.routes())
 
     server.listen(PORT).on('listening', () => (
       console.log(`sever listening ${PORT} port, go to http://localhost:${PORT}`)

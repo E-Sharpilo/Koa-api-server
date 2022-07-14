@@ -1,7 +1,7 @@
 import { Types } from "mongoose"
 
-export type Tag = {
+export type TTag = {
   _id: Types.ObjectId;
-  text?: string;
+  title?: string;
   color: string;
 }
