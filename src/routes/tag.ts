@@ -1,11 +1,11 @@
 import Router from "koa-router";
-import { addTag, deleteTag, getTags, updateTag } from "../controllers/tag";
+import { CreateTag, deleteTag, getTags, updateTag } from "../controllers/tag";
 
 export const TagsRout = new Router({
   prefix: '/tag'
 })
 
-TagsRout.post('/', addTag)
-TagsRout.delete('/', deleteTag)
-TagsRout.patch('/', updateTag)
+TagsRout.post('/', CreateTag)
+TagsRout.delete('/:id?', deleteTag)
+TagsRout.patch('/:id?', updateTag)
 TagsRout.get('/', getTags)
