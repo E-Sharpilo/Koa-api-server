@@ -1,6 +1,7 @@
 import { Context } from "koa";
 import mongoose from "mongoose";
 import { Card } from "../models/card";
+import { Card_Tag } from "../models/card_tag";
 import { TCard } from "../types/card";
 
 export class CardService {
@@ -41,6 +42,7 @@ export class CardService {
     }
 
     await Card.deleteOne({ _id: id });
+    await Card_Tag.deleteMany({cardId: id})
 
     return id;
   }

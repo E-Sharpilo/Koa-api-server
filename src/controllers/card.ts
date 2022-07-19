@@ -1,7 +1,4 @@
 import { Context } from "koa";
-import mongoose from "mongoose";
-import { Card } from "../models/card";
-import { TCard } from "../types/card";
 import { CardService } from "../services/card";
 
 const cardService = new CardService();

@@ -7,6 +7,7 @@ import { BordersRout } from './routes/boards'
 import { ListsRout } from './routes/list';
 import { CardsRout } from './routes/card';
 import { TagsRout } from './routes/tag';
+import { CardTagRout } from './routes/card_tag';
 
 const PORT = config.server.port
 
@@ -32,6 +33,7 @@ const start = () => {
       .use(ListsRout.routes())
       .use(CardsRout.routes())
       .use(TagsRout.routes())
+      .use(CardTagRout.routes())
 
     server.listen(PORT).on('listening', () => (
       console.log(`sever listening ${PORT} port, go to http://localhost:${PORT}`)

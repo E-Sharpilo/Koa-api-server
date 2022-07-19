@@ -45,7 +45,7 @@ export class ListService {
     const list = await List.findOne({ _id: id });
 
     if (!list) {
-      throw new Error("Board not found");
+      throw new Error("List not found");
     }
 
     return list;

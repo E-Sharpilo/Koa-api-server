@@ -1,29 +1,23 @@
 import { Context } from "koa";
-import mongoose from "mongoose";
-import { Card_Tag } from "../models/card_tag";
-import { TCard_Tag } from "../types/card_tag";
+import { CardTagsService } from "../services/card_tags";
+
+
+const cardTagsService = new CardTagsService()
 
 export const addCardTag = async (ctx: Context) => {
-
-  const card_tag: TCard_Tag = {
-    _id: new mongoose.Types.ObjectId(),
-    cardId: ctx.request.body.cardId,
-    tagId: ctx.request.body.tagId
-  }
-
   try {
-
-    ctx.body = await Card_Tag.create(card_tag)
+    ctx.body = await cardTagsService.crateCardTag(ctx);
     ctx.status = 201;
   } catch (error) {
     ctx.status = 500;
-    ctx.body = error
+    ctx.body = error;
   }
 }
 
 export const deleteCardTag = async (ctx: Context) => {
+  const id = ctx.url.split("/")[2];
   try {
-    await Card_Tag.deleteOne({ _id: ctx.request.body._id })
+    ctx.body = await cardTagsService.deleteCardTags(id);
     ctx.status = 202
   } catch (error) {
     ctx.status = 504
@@ -33,7 +27,7 @@ export const deleteCardTag = async (ctx: Context) => {
 
 export const getCardTags = async (ctx: Context) => {
   try {
-    ctx.body = await Card_Tag.find({ cardId: ctx.request.query.cardId })
+    ctx.body = await cardTagsService.getCardTags(ctx);
     ctx.status = 202
   } catch (error) {
     ctx.status = 504

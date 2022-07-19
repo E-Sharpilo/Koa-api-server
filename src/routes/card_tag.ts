@@ -7,6 +7,6 @@ export const CardTagRout = new Router({
 })
 
 CardTagRout.post('/', addCardTag)
-CardTagRout.delete('/', deleteCardTag)
+CardTagRout.delete('/:id?', deleteCardTag)
 CardTagRout.get('/', getCardTags)
 
