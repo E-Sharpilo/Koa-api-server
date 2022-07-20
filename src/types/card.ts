@@ -5,4 +5,5 @@ export type TCard = {
   listId: Types.ObjectId;
   title: string;
   description: string;
+  tagsId?:string[]
 }

@@ -3,10 +3,27 @@ import mongoose from "mongoose";
 import { Card } from "../models/card";
 import { Card_Tag } from "../models/card_tag";
 import { TCard } from "../types/card";
+import { TCard_Tag } from "../types/card_tag";
 
 export class CardService {
   async getCards(listId: string[] | string) {
-    const allCards = await Card.find({ listId: listId });
+    const allCards: any = await Card.find({ listId: listId });
+
+    console.log("cards", allCards);
+
+    const promises: any[] = []
+
+    allCards.forEach(async (card: any, i:number) => {
+      const tagsId = await Card_Tag.find({ cardId: card._id }, { tagId: true });
+      allCards[i].tagsId = tagsId;
+
+      promises.push(allCards[i])
+    })
+     
+    
+    console.log("cards with tags", promises);
+
+
 
     if (!allCards) {
       throw new Error("Cards not found");
@@ -16,7 +33,9 @@ export class CardService {
   }
 
   async getCardById(id: string) {
-    const card = await Card.findOne({ _id: id });
+    const card: any = await Card.findOne({ _id: id });
+    const tagsId = await Card_Tag.find({ cardId: id }, { tagId: true });
+    card.tagsId = tagsId;
 
     if (!card) {
       throw new Error("Card not found");
@@ -42,7 +61,7 @@ export class CardService {
     }
 
     await Card.deleteOne({ _id: id });
-    await Card_Tag.deleteMany({cardId: id})
+    await Card_Tag.deleteMany({ cardId: id });
 
     return id;
   }
@@ -57,6 +76,6 @@ export class CardService {
 
     await Card.create(card);
 
-    return card
+    return card;
   }
 }

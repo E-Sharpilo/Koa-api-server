@@ -6,6 +6,7 @@ const cardSchema = new Schema<TCard>({
   listId: Schema.Types.ObjectId,
   title: { type: String, required: true },
   description: String,
+  tagsId: {}
 }, {
   versionKey: false
 })
