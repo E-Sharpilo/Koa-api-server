@@ -3,37 +3,31 @@ import mongoose from "mongoose";
 import { Card } from "../models/card";
 import { Card_Tag } from "../models/card_tag";
 import { TCard } from "../types/card";
-import { TCard_Tag } from "../types/card_tag";
 
 export class CardService {
   async getCards(listId: string[] | string) {
-    const allCards: any = await Card.find({ listId: listId });
+    const allCards: any = await Card.find({ listId: listId }).lean();
 
-    console.log("cards", allCards);
+    const promises = await allCards.map(async (card:any) => await Card_Tag.find({ cardId: card._id }, { tagId: true }))
 
-    const promises: any[] = []
+    const tags = await Promise.all(promises)
 
-    allCards.forEach(async (card: any, i:number) => {
-      const tagsId = await Card_Tag.find({ cardId: card._id }, { tagId: true });
-      allCards[i].tagsId = tagsId;
-
-      promises.push(allCards[i])
+        
+    allCards.map((card: any, i: number) => {
+      card.tagsId = tags[i]
     })
-     
-    
-    console.log("cards with tags", promises);
-
 
 
     if (!allCards) {
       throw new Error("Cards not found");
     }
 
-    return allCards;
+    
+    return JSON.stringify(allCards);
   }
 
   async getCardById(id: string) {
-    const card: any = await Card.findOne({ _id: id });
+    const card: any = await Card.findOne({ _id: id }).lean();
     const tagsId = await Card_Tag.find({ cardId: id }, { tagId: true });
     card.tagsId = tagsId;
 
@@ -52,7 +46,11 @@ export class CardService {
         description: ctx.request.body.description,
       }
     );
-    return await Card.findOne({ _id: id });
+
+    const card: any = await Card.findOne({ _id: id }).lean();
+    const tagsId = await Card_Tag.find({ cardId: id }, { tagId: true });
+    card.tagsId = tagsId;
+    return card;
   }
 
   async deleteCard(id: string) {

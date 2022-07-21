@@ -15,7 +15,7 @@ export const addCardTag = async (ctx: Context) => {
 }
 
 export const deleteCardTag = async (ctx: Context) => {
-  const id = ctx.url.split("/")[2];
+  const id = ctx.url.split("/")[2];  
   try {
     ctx.body = await cardTagsService.deleteCardTags(id);
     ctx.status = 202
