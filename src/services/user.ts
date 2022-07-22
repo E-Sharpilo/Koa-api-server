@@ -28,16 +28,37 @@ export class UserService {
     }
   }
 
-  async login() {
-    console.log('login');
+  async login(email: string, password: string) {
+    const user = await User.findOne({email})
+    if (!user) {
+      throw new Error('User with this email not found')
+    }
+
+    const isPasswordEqual = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordEqual) {
+      throw new Error('Wrong password')
+    }
+
+    const userDto = new UserDto(user)
+    const tokens = tokenService.generateTokens({...userDto})
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+    return {
+      ...tokens,
+      userDto
+    }
   }
 
-  async logout() {
-    console.log('logout');
+  async logout(refreshToken?: string) {
+    const token = await tokenService.removeToken(refreshToken)
+    return token
   }
 
-  async refresh() {
-    console.log('refresh');
+  async refresh(refreshToken?: string) {
+    if(!refreshToken) {
+      throw new Error('Unauthorized user')
+    }
     
   }
 }

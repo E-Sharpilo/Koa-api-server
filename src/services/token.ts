@@ -32,4 +32,10 @@ export class TokenService {
 
     return 
   }
+
+  async removeToken(refreshToken?: string) {
+    const tokenData = await Token.deleteOne({refreshToken})
+
+    return tokenData
+  }
 }

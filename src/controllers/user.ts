@@ -25,8 +25,48 @@ export const registration = async (ctx: Context) => {
     ctx.response.status = 200;
     ctx.response.body = userData;
   } catch (error) {
-    console.log(error);
     ctx.response.status = 400;
     ctx.response.body = `Bad Request, ${error}`;
   }
 };
+
+export const login = async (ctx: Context) => {  
+  try {
+    const {email, password} = ctx.request.body;
+    const userData = await userService.login(email, password);
+
+    ctx.cookies.set("refreshToken", userData.refreshToken, {
+      maxAge: 2592000000,
+      httpOnly: true,
+    });
+
+    ctx.response.body = userData;
+
+  } catch (error) {
+    ctx.response.status = 400;
+    ctx.response.body = `Bad Request, ${error}`;
+  }
+}
+
+export const logout = async (ctx: Context) => {
+  const refreshToken = ctx.cookies.get('refreshToken')
+  console.log(refreshToken);
+  
+  const token  = await userService.logout(refreshToken)
+  ctx.cookies.set("refreshToken", null)
+
+  return ctx.status = 200
+} 
+
+// export const refresh = async (ctx: Context) => {
+//   const refreshToken = ctx.cookies.get('refreshToken')
+//   const userData = await userService.refresh(refreshToken)
+
+//   ctx.cookies.set("refreshToken", userData.refreshToken, {
+//     maxAge: 2592000000,
+//     httpOnly: true,
+//   });
+
+//   ctx.response.status = 200;
+//   ctx.response.body = userData;
+// }
