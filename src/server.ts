@@ -3,15 +3,17 @@ import cors from '@koa/cors'
 import bodyParser from 'koa-bodyparser';
 import { config } from './config/config';
 import mongoose from 'mongoose';
-import { BordersRout } from './routes/boards'
-import { ListsRout } from './routes/list';
-import { CardsRout } from './routes/card';
-import { TagsRout } from './routes/tag';
-import { CardTagRout } from './routes/card_tag';
+import cookie from 'koa-cookie';
+import router from './routes';
 
 const PORT = config.server.port
 
 const server: Koa = new Koa()
+
+server.use(cors())
+server.use(bodyParser())
+server.use(cookie())
+server.use(router())
 
 mongoose
   .connect(config.mongo.url, { retryWrites: true, w: 'majority' })
@@ -24,17 +26,8 @@ mongoose
   })
 
 
-const start = () => {
+const start = async () => {
   try{
-    server.use(cors())
-    server.use(bodyParser())
-  
-    server.use(BordersRout.routes())
-      .use(ListsRout.routes())
-      .use(CardsRout.routes())
-      .use(TagsRout.routes())
-      .use(CardTagRout.routes())
-
     server.listen(PORT).on('listening', () => (
       console.log(`sever listening ${PORT} port, go to http://localhost:${PORT}`)
     ))

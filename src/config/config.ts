@@ -12,5 +12,9 @@ export const config = {
   },
   server: {
     port: PORT
+  },
+  tokens: {
+    access: process.env.JWT_ACCESS_SECRET || 'access some',
+    refresh: process.env.JWT_REFRESH_SECRET || 'refresh some'
   }
 }
