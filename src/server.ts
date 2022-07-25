@@ -10,7 +10,11 @@ const PORT = config.server.port
 
 const server: Koa = new Koa()
 
-server.use(cors())
+server.use(cors(
+  {
+    credentials: true
+  }
+))
 server.use(bodyParser())
 server.use(cookie())
 server.use(router())

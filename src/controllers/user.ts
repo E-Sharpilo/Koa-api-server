@@ -58,15 +58,19 @@ export const logout = async (ctx: Context) => {
   return ctx.status = 200
 } 
 
-// export const refresh = async (ctx: Context) => {
-//   const refreshToken = ctx.cookies.get('refreshToken')
-//   const userData = await userService.refresh(refreshToken)
+export const refresh = async (ctx: Context) => {
+  const refreshToken = ctx.cookies.get('refreshToken')
+  const userData = await userService.refresh(refreshToken)
 
-//   ctx.cookies.set("refreshToken", userData.refreshToken, {
-//     maxAge: 2592000000,
-//     httpOnly: true,
-//   });
+  if(!userData) {
+    throw new Error('something wrong')
+  }
 
-//   ctx.response.status = 200;
-//   ctx.response.body = userData;
-// }
+  ctx.cookies.set("refreshToken", userData.refreshToken, {
+    maxAge: 2592000000,
+    httpOnly: true,
+  });
+
+  ctx.response.status = 200;
+  ctx.response.body = userData;
+}

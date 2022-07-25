@@ -60,5 +60,28 @@ export class UserService {
       throw new Error('Unauthorized user')
     }
     
+    const verUserData = tokenService.validateRefreshToken(refreshToken)
+    const tokenFromDB = await tokenService.findToken(refreshToken)
+
+    if (!verUserData || !tokenFromDB) {
+      throw new Error('Unauthorized user')
+    }
+
+    console.log(verUserData);
+    
+    const user = await User.findById(verUserData.id)
+
+    if(!user) {
+      return
+    }
+
+    const userDto = new UserDto(user)
+    const tokens = tokenService.generateTokens({...userDto})
+    await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+    return {
+      ...tokens,
+      userDto
+    }
   }
 }

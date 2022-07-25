@@ -39,7 +39,7 @@ export const getCards = async (ctx: Context) => {
     }
   } catch (error) {
     ctx.status = 404;
-    ctx.body = error;
+    ctx.body = 'not found';
   }
 };
 
