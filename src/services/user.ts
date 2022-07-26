@@ -13,7 +13,7 @@ export class UserService {
       throw new Error('User with this email already exist')
     }
 
-    const hashPassword = await bcrypt.hash(password, 3)
+    const hashPassword = await bcrypt.hash(password, 5)
     const user = await User.create({email, password: hashPassword})
 
     const userDto = new UserDto(user)
@@ -24,7 +24,7 @@ export class UserService {
 
     return {
       ...tokens,
-      userDto
+      user: userDto
     }
   }
 
@@ -46,7 +46,7 @@ export class UserService {
 
     return {
       ...tokens,
-      userDto
+      user: userDto
     }
   }
 
@@ -66,8 +66,6 @@ export class UserService {
     if (!verUserData || !tokenFromDB) {
       throw new Error('Unauthorized user')
     }
-
-    console.log(verUserData);
     
     const user = await User.findById(verUserData.id)
 
@@ -81,7 +79,7 @@ export class UserService {
 
     return {
       ...tokens,
-      userDto
+      user: userDto
     }
   }
 }

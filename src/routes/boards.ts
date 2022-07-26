@@ -7,7 +7,7 @@ const BordersRout = new Router({
 })
 
 
-BordersRout.get('/:id?',authorization, getBoards)
+BordersRout.get('/:id?', authorization, getBoards)
 BordersRout.post('/',authorization, createBoard)
 BordersRout.delete('/:id',authorization, deleteBoard)
 BordersRout.patch('/:id',authorization, updateBoard)

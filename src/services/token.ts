@@ -11,7 +11,7 @@ type User = {
 export class TokenService {
   generateTokens(payload: User) {
     const accessToken = jwt.sign(payload, config.tokens.access, {
-      expiresIn: "10min",
+      expiresIn: "10m",
     });
     const refreshToken = jwt.sign(payload, config.tokens.refresh, {
       expiresIn: "30d",
