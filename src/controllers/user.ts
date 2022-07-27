@@ -3,8 +3,11 @@ import { Context } from "koa";
 import Joi from "joi";
 
 const requestSchema = Joi.object({
+  lastName: Joi.string().max(20),
+  firstName: Joi.string().max(30),
   email: Joi.string().email(),
   password: Joi.string().min(5).max(20),
+  confirmPassword: Joi.string()
 });
 
 const userService = new UserService();
@@ -17,7 +20,9 @@ export const registration = async (ctx: Context) => {
 
     const userData = await userService.registration(
       validateRequest.email,
-      validateRequest.password
+      validateRequest.password,
+      validateRequest.lastName,
+      validateRequest.firstName
     );
 
     ctx.cookies.set("refreshToken", userData.refreshToken, {
@@ -77,3 +82,14 @@ export const refresh = async (ctx: Context) => {
     ctx.body = "Unauthorized user";
   }
 };
+
+export const getUser = async (ctx: Context) => {
+  try {
+    const user = await userService.getUser(ctx.request.body.user.id)
+    ctx.response.status = 200;
+    ctx.response.body = user;
+  } catch (error) {
+    ctx.status = 401;
+    ctx.body = "Unauthorized user";
+  }
+}

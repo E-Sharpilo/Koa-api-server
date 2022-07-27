@@ -6,7 +6,7 @@ import { UserDto } from '../dtos/user-dto';
 const tokenService = new TokenService()
 
 export class UserService {
-  async registration(email: string, password: string) {
+  async registration(email: string, password: string, firstName: string, lastName: string) {
     const candidate = await User.findOne({email})
 
     if(candidate) {
@@ -14,7 +14,8 @@ export class UserService {
     }
 
     const hashPassword = await bcrypt.hash(password, 5)
-    const user = await User.create({email, password: hashPassword})
+
+    const user = await User.create({email, password: hashPassword, lastName, firstName})
 
     const userDto = new UserDto(user)
 
@@ -78,8 +79,23 @@ export class UserService {
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
     return {
-      ...tokens,
-      user: userDto
+      ...tokens
     }
+  }
+
+  async getUser(id: string) {
+    
+    if (!id) {
+      throw new Error('UnAuthorized user')
+    }
+
+    const user = await User.findById(id)
+
+    if(!user) {
+      return
+    }
+
+    const userDto = new UserDto(user)
+    return {...userDto}
   }
 }
